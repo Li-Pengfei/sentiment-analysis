@@ -1,0 +1,7 @@
+# exclude everything in a foler
+data/*
+
+.ipynb_checkpoints/*
+
+# exception to the rule
+!data/README.md
