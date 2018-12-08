@@ -48,7 +48,11 @@ def build_vocab(corpus):
     Return: OrderedDict - vocabulary mapping from word to integer.
     """
     # Build vocabulary
-    word_counts = Counter(itertools.chain(*corpus))
+    corpus_2d = []  # convert 3d corpus to 2d list
+    for doc in corpus:
+    	for sent in doc:
+    		corpus_2d.append(sent)
+    word_counts = Counter(itertools.chain(*corpus_2d))
     # Mapping from index to word (type: list)
     vocabulary = ['<PAD/>', '<UKN/>']   # 0 for padding, 1 for unknown words
     vocabulary = vocabulary.append([x[0] for x in word_counts.most_common()])
