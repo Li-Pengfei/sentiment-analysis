@@ -55,7 +55,7 @@ def build_vocab(corpus):
     word_counts = Counter(itertools.chain(*corpus_2d))
     # Mapping from index to word (type: list)
     vocabulary = ['<PAD/>', '<UKN/>']   # 0 for padding, 1 for unknown words
-    vocabulary = vocabulary.append([x[0] for x in word_counts.most_common()])
+    vocabulary = vocabulary + [x[0] for x in word_counts.most_common()]
     # Mapping from word to index
     vocab2int = OrderedDict({x: i for i, x in enumerate(vocabulary)})
     return vocab2int
