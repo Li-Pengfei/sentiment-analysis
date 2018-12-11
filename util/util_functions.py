@@ -5,6 +5,8 @@ import itertools
 from collections import Counter, OrderedDict
 from keras.preprocessing.sequence import pad_sequences
 import re
+import gensim
+
 
 def clean_str(string):
     """
@@ -153,6 +155,35 @@ def load_embedding_matrix(embed_path, vocab2int, EMBEDDING_DIM, embed_type='glov
 			embedding_matrix[i] = embedding_vector
 
 	return embedding_matrix
+
+def load_embedding_matrix_gensim(embed_path, vocab2int, EMBEDDING_DIM):	
+	"""
+	load Word2Vec using gensim: 300x1 word vecs from Google (Mikolov) word2vec: GoogleNews-vectors-negative300.bin
+	return embedding_matrix 
+	embedding_matrix[i] is the embedding for 'vocab2int' integer index i
+	"""
+	word2vec_model = gensim.models.KeyedVectors.load_word2vec_format(embed_path, binary=True)
+	embeddings = {}
+	embeddings['<PAD/>'] = np.zeros(EMBEDDING_DIM) # Zero vector for '<PAD/>' word
+	embedding_UKN = np.random.uniform(-0.10, 0.10, EMBEDDING_DIM)  # Vector of small random numbers for unknown words
+	# embedding_UKN = vector / np.linalg.norm(embedding_UKN)   # Normalize to unit vector
+	embeddings['<UKN/>'] = embedding_UKN
+
+	for word in word2vec_model.vocab:
+		embeddings[word] = word2vec_model[word]
+
+	embedding_matrix = np.zeros((len(vocab2int) , EMBEDDING_DIM))
+	for word, i in vocab2int.items():
+		embedding_vector = embeddings.get(word)
+		if embedding_vector is not None:
+			embedding_matrix[i] = embedding_vector
+		else:   # word is unknown
+			embedding_vector = np.random.uniform(-0.10, 0.10, EMBEDDING_DIM)  # Vector of small random numbers for unknown words
+			# embedding_vector = vector / np.linalg.norm(embedding_vector)   # Normalize to unit vector
+			embedding_matrix[i] = embedding_vector
+
+	return embedding_matrix
+
 
 # function for calculating precision and recall for each class
 def getPrecision(pred_test, yTest, targetLabel):
