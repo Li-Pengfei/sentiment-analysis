@@ -1,7 +1,11 @@
 # exclude everything in a foler
 data/*
 
+pickle_data/*
+
 .ipynb_checkpoints/*
+
 
 # exception to the rule
 !data/README.md
+!pickle_data/README.md
