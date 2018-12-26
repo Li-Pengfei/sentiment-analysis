@@ -6,7 +6,16 @@ from collections import Counter, OrderedDict
 from keras.preprocessing.sequence import pad_sequences
 import re
 import gensim
+from nltk.corpus import stopwords
+import string
 
+
+punctuation_list = list(string.punctuation)
+# English stop words lists
+stop_words = stopwords.words('english')
+for punctuation in punctuation_list:
+    stop_words.append(punctuation)
+    
 
 def clean_str(string):
     """
@@ -35,6 +44,7 @@ def sent_tokenize(doc):
 def word_tokenize(sent):
 	tokenized_text = nltk.word_tokenize(sent)  # this gives you a list of words
 	tokenized_text = [token.lower() for token in tokenized_text]  # optional: convert all words to lower case
+    # tokenized_text = [token.lower() for token in tokenized_text if token not in stop_words]  # optional: remove stop words
 	return tokenized_text
 
 def pos_tag(tokenized_text):
